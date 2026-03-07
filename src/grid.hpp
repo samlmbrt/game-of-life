@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdint>
 #include <vector>
 
 class Grid {
@@ -16,8 +17,8 @@ public:
 private:
   unsigned int width_;
   unsigned int height_;
-  std::vector<bool> current_;
-  std::vector<bool> next_;
+  std::vector<std::uint8_t> current_;
+  std::vector<std::uint8_t> next_;
 
   [[nodiscard]] std::size_t index(unsigned int x, unsigned int y) const {
     return static_cast<std::size_t>(y) * width_ + x;

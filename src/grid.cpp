@@ -9,8 +9,8 @@ Grid::Grid(unsigned int width, unsigned int height, double density)
   auto gen = std::mt19937{rd()};
   auto dist = std::uniform_real_distribution<double>{0.0, 1.0};
 
-  for (auto &&cell : current_) {
-    cell = dist(gen) < density;
+  for (auto &cell : current_) {
+    cell = dist(gen) < density ? std::uint8_t{1} : std::uint8_t{0};
   }
 }
 
