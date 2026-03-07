@@ -51,7 +51,6 @@ int main(int argc, char *argv[]) {
   auto pixels = std::vector<std::uint8_t>(
       static_cast<std::size_t>(config.width) * config.height * 4);
 
-  auto clock = sf::Clock{};
   auto frame_count = 0u;
   auto fps_timer = sf::Clock{};
 
