@@ -2,6 +2,34 @@
 
 Conway's Game of Life implemented in C++23 with SFML 3. Each pixel represents a cell.
 
+<!-- Replace the link below with your video/gif -->
+https://github.com/user-attachments/assets/VIDEO_ID
+
+## How It Works
+
+### Simulation
+
+The simulation follows the standard [Conway's Game of Life](https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life) rules. Each cell is either alive or dead, and its next state depends on its eight neighbors:
+
+- A live cell with 2 or 3 neighbors survives; otherwise it dies.
+- A dead cell with exactly 3 neighbors becomes alive.
+
+The grid uses a **double-buffered** approach: two flat `vector<uint8_t>` buffers (`current` and `next`) are swapped each generation, avoiding allocations during the simulation loop.
+
+### Active Cell Tracking
+
+To avoid recomputing stable regions, a third buffer tracks which cells are **active** — meaning they or a neighbor changed in the previous generation. Cells that haven't changed and whose neighbors haven't changed are skipped entirely. On a typical board, this reduces the per-tick work significantly as the simulation stabilizes.
+
+### Rendering
+
+Each pixel maps 1:1 to a cell. A per-cell **brightness** buffer drives a green glow effect:
+
+- **Live cells** ramp up in brightness over successive frames.
+- **Newly dead cells** fade out gradually, leaving a dim green trail.
+- **Long-dead cells** render as black.
+
+The pixel buffer (RGBA, 4 bytes per cell) is uploaded to an `sf::Texture` each frame and drawn as a single `sf::Sprite`.
+
 ## Prerequisites
 
 - CMake 3.28+
@@ -64,10 +92,10 @@ make clean    # remove all build artifacts
 ./build/release/game-of-life [width] [height] [density]
 ```
 
-| Argument  | Default | Description                          |
-|-----------|---------|--------------------------------------|
-| `width`   | 1600    | Window width in pixels               |
-| `height`  | 900     | Window height in pixels              |
+| Argument  | Default | Description                                         |
+|-----------|---------|-----------------------------------------------------|
+| `width`   | 1600    | Window width in pixels                              |
+| `height`  | 900     | Window height in pixels                             |
 | `density` | 0.5     | Initial probability of a cell being alive (0.0-1.0) |
 
 ### Examples
