@@ -1,5 +1,6 @@
 #include "grid.hpp"
 #include <SFML/Graphics.hpp>
+#include <algorithm>
 #include <cstdint>
 #include <span>
 #include <string>
@@ -26,18 +27,39 @@ Config parse_args(int argc, char *argv[]) {
   return config;
 }
 
-void render(Grid const &grid, std::span<std::uint8_t> pixels) {
+void render(Grid const &grid, std::span<std::uint8_t> pixels,
+            std::span<std::uint8_t> brightness) {
   auto const cells = grid.cells();
   auto const total =
       static_cast<std::size_t>(grid.get_width()) * grid.get_height();
 
   for (std::size_t i = 0; i < total; ++i) {
-    auto color = cells[i] != 0 ? std::uint8_t{255} : std::uint8_t{0};
     auto px = i * 4;
-    pixels[px + 0] = color;
-    pixels[px + 1] = color;
-    pixels[px + 2] = color;
-    pixels[px + 3] = 255;
+
+    if (cells[i] != 0) {
+      if (brightness[i] < 255) {
+        brightness[i] = static_cast<std::uint8_t>(
+            std::min(255, static_cast<int>(brightness[i]) + 20));
+      }
+
+      pixels[px + 0] = 0;
+      pixels[px + 1] = brightness[i];
+      pixels[px + 2] = 0;
+      pixels[px + 3] = 255;
+    } else if (brightness[i] > 0) {
+      pixels[px + 0] = 0;
+      pixels[px + 1] = static_cast<std::uint8_t>(brightness[i] / 2);
+      pixels[px + 2] = 0;
+      pixels[px + 3] = 255;
+
+      brightness[i] = static_cast<std::uint8_t>(
+          brightness[i] > 4 ? brightness[i] - brightness[i] / 4 : 0);
+    } else {
+      pixels[px + 0] = 0;
+      pixels[px + 1] = 0;
+      pixels[px + 2] = 0;
+      pixels[px + 3] = 255;
+    }
   }
 }
 
@@ -52,18 +74,21 @@ int main(int argc, char *argv[]) {
   auto sprite = sf::Sprite(texture);
   auto pixels = std::vector<std::uint8_t>(
       static_cast<std::size_t>(config.width) * config.height * 4);
+  auto brightness = std::vector<std::uint8_t>(
+      static_cast<std::size_t>(config.width) * config.height, 0);
 
   auto frame_count = 0u;
   auto fps_timer = sf::Clock{};
 
   while (window.isOpen()) {
     while (auto event = window.pollEvent()) {
-      if (event->is<sf::Event::Closed>())
+      if (event->is<sf::Event::Closed>()) {
         window.close();
+      }
     }
 
     grid.tick();
-    render(grid, pixels);
+    render(grid, pixels, brightness);
 
     texture.update(pixels.data());
     window.clear();

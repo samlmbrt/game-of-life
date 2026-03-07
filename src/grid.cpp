@@ -18,8 +18,9 @@ Grid::Grid(unsigned int width, unsigned int height, double density)
 unsigned int Grid::count_neighbors(unsigned int x, unsigned int y) const {
   auto count = 0u;
   for_each_neighbor(x, y, [&](unsigned int nx, unsigned int ny) {
-    if (current_[index(nx, ny)] != 0)
+    if (current_[index(nx, ny)] != 0) {
       ++count;
+    }
   });
   return count;
 }

@@ -10,6 +10,7 @@ public:
 
   void tick();
   [[nodiscard]] std::span<std::uint8_t const> cells() const { return current_; }
+
   [[nodiscard]] unsigned int get_width() const { return width_; }
   [[nodiscard]] unsigned int get_height() const { return height_; }
 
@@ -36,14 +37,16 @@ private:
 
     for (auto dy = -1; dy <= 1; ++dy) {
       for (auto dx = -1; dx <= 1; ++dx) {
-        if (dx == 0 && dy == 0)
+        if (dx == 0 && dy == 0) {
           continue;
+        }
 
         auto nx = ix + dx;
         auto ny = iy + dy;
 
-        if (nx < 0 || ny < 0 || nx >= iw || ny >= ih)
+        if (nx < 0 || ny < 0 || nx >= iw || ny >= ih) {
           continue;
+        }
 
         func(static_cast<unsigned int>(nx), static_cast<unsigned int>(ny));
       }
