@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 find_package(SFML 3 COMPONENTS Graphics REQUIRED)
 
-add_executable(game-of-life src/main.cpp)
+add_executable(game-of-life src/main.cpp src/grid.cpp)
 target_link_libraries(game-of-life PRIVATE SFML::Graphics)
 
 target_compile_options(game-of-life PRIVATE
