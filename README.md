@@ -22,13 +22,7 @@ To avoid recomputing stable regions, a third buffer tracks which cells are **act
 
 ### Rendering
 
-Each pixel maps 1:1 to a cell. A per-cell **brightness** buffer drives a green glow effect:
-
-- **Live cells** ramp up in brightness over successive frames.
-- **Newly dead cells** fade out gradually, leaving a dim green trail.
-- **Long-dead cells** render as black.
-
-The pixel buffer (RGBA, 4 bytes per cell) is uploaded to an `sf::Texture` each frame and drawn as a single `sf::Sprite`.
+Each pixel maps 1:1 to a cell — live cells are green, dead cells are black. The pixel buffer (RGBA, 4 bytes per cell) is uploaded to an `sf::Texture` each frame and drawn as a single `sf::Sprite`.
 
 ## Prerequisites
 
