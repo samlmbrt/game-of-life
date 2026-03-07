@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <span>
 #include <vector>
 
 class Grid {
@@ -8,9 +9,7 @@ public:
   Grid(unsigned int width, unsigned int height, double density);
 
   void tick();
-  [[nodiscard]] bool is_alive(unsigned int x, unsigned int y) const {
-    return current_[index(x, y)] != 0;
-  }
+  [[nodiscard]] std::span<std::uint8_t const> cells() const { return current_; }
   [[nodiscard]] unsigned int get_width() const { return width_; }
   [[nodiscard]] unsigned int get_height() const { return height_; }
 
@@ -20,7 +19,6 @@ private:
   std::vector<std::uint8_t> current_;
   std::vector<std::uint8_t> next_;
   std::vector<std::uint8_t> active_;
-  std::vector<std::uint8_t> changed_;
 
   [[nodiscard]] std::size_t index(unsigned int x, unsigned int y) const {
     return static_cast<std::size_t>(y) * width_ + x;

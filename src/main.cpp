@@ -27,15 +27,17 @@ Config parse_args(int argc, char *argv[]) {
 }
 
 void render(Grid const &grid, std::span<std::uint8_t> pixels) {
-  for (auto y = 0u; y < grid.get_height(); ++y) {
-    for (auto x = 0u; x < grid.get_width(); ++x) {
-      auto idx = (static_cast<std::size_t>(y) * grid.get_width() + x) * 4;
-      auto color = grid.is_alive(x, y) ? std::uint8_t{255} : std::uint8_t{0};
-      pixels[idx + 0] = color;
-      pixels[idx + 1] = color;
-      pixels[idx + 2] = color;
-      pixels[idx + 3] = 255;
-    }
+  auto const cells = grid.cells();
+  auto const total =
+      static_cast<std::size_t>(grid.get_width()) * grid.get_height();
+
+  for (std::size_t i = 0; i < total; ++i) {
+    auto color = cells[i] != 0 ? std::uint8_t{255} : std::uint8_t{0};
+    auto px = i * 4;
+    pixels[px + 0] = color;
+    pixels[px + 1] = color;
+    pixels[px + 2] = color;
+    pixels[px + 3] = 255;
   }
 }
 
