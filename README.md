@@ -2,8 +2,9 @@
 
 Conway's Game of Life implemented in C++23 with SFML 3. Each pixel represents a cell.
 
-<!-- Replace the link below with your video/gif -->
-https://github.com/user-attachments/assets/VIDEO_ID
+
+https://github.com/user-attachments/assets/c5f2e210-e5a3-49ba-92a9-c369b6d0dadd
+
 
 ## How It Works
 
